@@ -5,14 +5,21 @@ import { configureChains, createConfig, sepolia, WagmiConfig } from "wagmi";
 import { mainnet, polygon, optimism, arbitrum } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
+import dotenv from "dotenv";
+
+dotenv.config({ path: ".env" });
 
 const { chains, publicClient } = configureChains(
   [mainnet, polygon, optimism, arbitrum, sepolia],
-  [alchemyProvider({ apiKey: process.env.ALCHEMY_ID }), publicProvider()]
+  [
+    alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID }),
+    publicProvider(),
+  ]
 );
+console.log(process.env.NEXT_PUBLIC_ALCHEMY_ID);
 const { connectors } = getDefaultWallets({
   appName: "My RainbowKit App",
-  projectId: process.env.PROJECT_ID,
+  projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
   chains,
 });
 const wagmiConfig = createConfig({

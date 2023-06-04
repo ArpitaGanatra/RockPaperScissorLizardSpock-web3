@@ -2,8 +2,25 @@ import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import Header from "../components/header/header";
+import Icon from "../components/icon";
+import { useEffect, useState } from "react";
+import { useAccount } from "wagmi";
+
+const choices = ["Rock", "Paper", "Scissors", "Lizard", "Spock"];
 
 export default function Home() {
+  const { address, isConnected } = useAccount();
+  const [playerChoice, setPlayerChoice] = useState("");
+  const [winner, setWinner] = useState("");
+  const [player2Choice, setPlayer2Choice] = useState("");
+  const [player2Address, setPlayer2Address] = useState("");
+
+  const getPlayerChoice = (choice) => {
+    setWinner(""); // reset winner to empty string
+    // hideElements(); // hide elements before winner is determined
+    setPlayerChoice(choice);
+    // getComputerChoice(); // get computer's choice
+  };
   return (
     <div className={styles.container}>
       <Head>
@@ -16,41 +33,62 @@ export default function Home() {
 
       <main className={styles.main}>
         <h1 className={styles.title}>Rock Paper Scissors Lizard Spock</h1>
+        {isConnected ? (
+          <div className={styles.grid}>
+            {/* Player1 */}
+            <div>
+              <div className={styles.card}>
+                <p>play with</p>
+                <input
+                  type="text"
+                  onChange={(e) => setPlayer2Address(e.target.value)}
+                />
+                <h3>Your Choice</h3>
 
-        {/* <p className={styles.description}>
-          Get started by editing{" "}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div> */}
+                <div>
+                  <h4>{playerChoice}</h4>
+                  <Icon choice={playerChoice} />
+                </div>
+              </div>
+              {choices.map((choice) => (
+                <button
+                  key={choice}
+                  variant="outline-primary"
+                  className="m-1"
+                  onClick={() => getPlayerChoice(choice)}
+                >
+                  {choice}
+                </button>
+              ))}
+            </div>
+            {/* Play */}
+            <div>
+              <button> {winner ? "Play Again" : "Play"}</button>
+            </div>
+            {/* player2 */}
+            <div>
+              <div className={styles.card}>
+                <h3>Other Player Choice</h3>
+                <div>
+                  <h4>{player2Choice}</h4>
+                  <Icon choice={player2Choice} />
+                </div>
+              </div>
+              {choices.map((choice) => (
+                <button
+                  key={choice}
+                  variant="outline-primary"
+                  className="m-1"
+                  // onClick={() => getPlayer2Choice(choice)}
+                >
+                  {choice}
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <>connect wallet to play</>
+        )}
       </main>
 
       <footer className={styles.footer}>
